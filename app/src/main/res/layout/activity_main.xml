@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <EditText
+        android:id="@+id/teInput"
+        android:layout_width="282dp"
+        android:layout_height="67dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginLeft="48dp"
+        android:layout_marginTop="144dp"
+        android:textSize="30sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btnShow"
+        android:layout_width="129dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="116dp"
+        android:layout_marginLeft="116dp"
+        android:text="show"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:layout_marginLeft="48dp"
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/teInput">
+
+        <RadioButton
+            android:id="@+id/rbGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="true"
+            android:clickable="true"
+            android:text="group" />
+
+        <RadioButton
+            android:id="@+id/rbRoom"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:checked="false"
+            android:clickable="true"
+            android:text="room" />
+
+        <RadioButton
+            android:id="@+id/rbTeacher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:text="teacher" />
+    </RadioGroup>
+
+</android.support.constraint.ConstraintLayout>

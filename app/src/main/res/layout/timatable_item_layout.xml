@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintL"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="top"
+    android:paddingStart="16dp"
+    android:paddingTop="0dp"
+    android:paddingEnd="16dp"
+    android:paddingBottom="2dp">
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="189dp"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:text="Кофтан Ю. Р."
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="29dp"
+        android:layout_height="34dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/every" />
+
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="86dp"
+        android:layout_height="19dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:inputType="time"
+        android:text="00:01 - 01:00"
+        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView14"
+        android:layout_width="230dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginRight="1dp"
+        android:gravity="center_horizontal"
+        android:text="fsdfsdf"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.456"
+        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintTop_toBottomOf="@+id/textView12" />
+
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="72dp"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:paddingTop="0dp"
+        android:text="3-607"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView14" />
+
+    <TextView
+        android:id="@+id/textViewLt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
+        android:text="пр."
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+</android.support.constraint.ConstraintLayout>
