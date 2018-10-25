@@ -26,7 +26,7 @@ class TimetableActivity : AppCompatActivity() {
             var switcher = true
 
             var lessonNumber = 0
-            val firstLessonTime = parsedDay.data[0].lesson_time
+            val firstLessonTime = parsedDay.data[0].time
 
             if (firstLessonTime.length >= 13) {
                 val endTime = firstLessonTime.substring(8, 13)
@@ -66,11 +66,11 @@ class TimetableActivity : AppCompatActivity() {
                 for (str in parsedLesson.parameter2)
                     param2name += str.name
 
-                if (parsedLesson.lesson_time.length > 1)
+                if (parsedLesson.time.length > 1)
                     switcher = !switcher
 
                 var circle = 0
-                when (parsedLesson.data_circle) {
+                when (parsedLesson.parity) {
                     " up-circle " -> circle = 1
                     " down-circle " -> circle = 2
                 }
@@ -80,16 +80,16 @@ class TimetableActivity : AppCompatActivity() {
 
                 day.add(TimetableItem(
                         param1name,
-                        parsedLesson.lesson_name,
+                        parsedLesson.name,
                         param2name,
-                        parsedLesson.lesson_time,
+                        parsedLesson.time,
                         parsedTimetable.name,
-                        parsedLesson.lesson_type,
+                        parsedLesson.type,
                         circle,
                         switcher
                 ))
             }
-            linkedHashMap[parsedDay.day_name] = day
+            linkedHashMap[parsedDay.name] = day
         }
         page_cout = parsedTimetable.data.size
 
@@ -98,7 +98,6 @@ class TimetableActivity : AppCompatActivity() {
         viewPager = findViewById(R.id.view_pager)
         pagerAdapter = TimetableFragmentPagerAdapter(supportFragmentManager, timetableObj)
         viewPager!!.adapter = pagerAdapter
-
 
 
     }

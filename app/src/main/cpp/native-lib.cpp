@@ -3,15 +3,7 @@
 #include <vector>
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_timetable_slava_timetableiate_MainActivity_stringFromJNI(
-        JNIEnv *env,
-        jobject /* this */) {
-    std::string hello = "Hello from C++";
-    return env->NewStringUTF(hello.c_str());
-}
-
-extern "C" JNIEXPORT jstring JNICALL
-Java_com_timetable_slava_timetableiate_MainActivity_00024GetTimetableAsyncTask_getCsrfToken(
+Java_com_timetable_slava_timetableiate_GetTimetableAsyncTask_getCsrfToken(
         JNIEnv* env,
         jobject obj,
         jstring html )
@@ -44,25 +36,13 @@ std::string getVal(const char* val, const std::string& where) {
     return where.substr(entry_first, entry_last - entry_first);
 }
 
-extern "C" JNIEXPORT jstring JNICALL
-Java_com_timetable_slava_timetableiate_MainActivity_00024GetTimetableAsyncTask_getCookie(
-        JNIEnv* env,
-        jobject obj,
-        jstring jResponse )
-{
-    std::string response = env->functions->GetStringUTFChars(env, jResponse, 0);
-    std::string cookie = getVal("XSRF-TOKEN", response) + ";" + getVal("iate_niyau_mifi_session", response + ";");
-    return env->NewStringUTF(cookie.c_str());
-}
 
-
-
-class TimetableItem {
+class TimetableLesson {
 public:
     std::string time;
-    std::string lessonType;
-    std::string lessonName;
-    std::string dataCircle;
+    std::string type;
+    std::string name;
+    std::string parity;
     std::vector<std::pair<std::string, std::string>> parameter1;
     std::vector<std::pair<std::string, std::string>> parameter2;
 };
@@ -76,11 +56,11 @@ public:
 public:
     TimetableDay() {}
     TimetableDay(size_t count)           { _arr.resize(count); }
-    TimetableItem&  get     (size_t pos) { return _arr[pos]; }
+    TimetableLesson&  get     (size_t pos) { return _arr[pos]; }
     size_t          getCount()           { return _arr.size(); }
 
 private:
-    std::vector<TimetableItem> _arr;
+    std::vector<TimetableLesson> _arr;
 };
 
 
@@ -110,19 +90,19 @@ public:
         for (size_t i = 0; i < _arr.size(); ++i) {
             auto& day = _arr[i];
             out += "\n\t{";
-            out += "\n\t\t\"day_name\" : \"";
+            out += "\n\t\t\"name\" : \"";
             out += day.name;
             out += "\",\n\t\t\"data\" : [";
             for (size_t j = 0; j < day.getCount(); ++j) {
                 auto& item = day.get(j);
-                out += "\n\t\t{\n\t\t\t\"lesson_name\" : \"";
-                out += item.lessonName;
-                out += "\",\n\t\t\t\"lesson_type\" : \"";
-                out += item.lessonType;
-                out += "\",\n\t\t\t\"lesson_time\" : \"";
+                out += "\n\t\t{\n\t\t\t\"name\" : \"";
+                out += item.name;
+                out += "\",\n\t\t\t\"type\" : \"";
+                out += item.type;
+                out += "\",\n\t\t\t\"time\" : \"";
                 out += item.time;
-                out += "\",\n\t\t\t\"data_circle\" : \"";
-                out += item.dataCircle;
+                out += "\",\n\t\t\t\"parity\" : \"";
+                out += item.parity;
 
                 out += "\",\n\t\t\t\"parameter1\" : [";
                 for (size_t k = 0; k < item.parameter1.size(); ++k) {
@@ -330,9 +310,9 @@ public:
 
             for (size_t j = 0; j < lessons[i].size(); ++j) {
                 timetableDay.get(j).time = eraseDashInTime(readAfter("col-xs-1\">", 11, "</div>", lessons[i][j]));
-                timetableDay.get(j).lessonType = readAfter("lesson-type\">", 14, "</div>", lessons[i][j]);
-                timetableDay.get(j).dataCircle = readAfter("lesson-week nopadding circle ", 30, "\"", lessons[i][j]);
-                timetableDay.get(j).lessonName = readAfter("lesson-name\">", 14, "</div>", lessons[i][j]);
+                timetableDay.get(j).type = readAfter("lesson-type\">", 14, "</div>", lessons[i][j]);
+                timetableDay.get(j).parity = readAfter("lesson-week nopadding circle ", 30, "\"", lessons[i][j]);
+                timetableDay.get(j).name = readAfter("lesson-name\">", 14, "</div>", lessons[i][j]);
                 timetableDay.get(j).parameter1 = readPairs("col-xs-2\"><a href=\"", 20, "<a href=\"", 10, "</a>", "\">", 2, "</div>", lessons[i][j]);
                 timetableDay.get(j).parameter2 = readPairs("col-xs\"><a href=\"", 18, "<a href=\"", 10, "</a>", "\">", 2, "</div>", lessons[i][j]);
             }
