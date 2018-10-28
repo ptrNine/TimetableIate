@@ -3,7 +3,7 @@
 #include <vector>
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_timetable_slava_timetableiate_GetTimetableAsyncTask_getCsrfToken(
+Java_com_timetable_slava_timetableiate_GetTimetableTask_getCsrfToken(
         JNIEnv* env,
         jobject obj,
         jstring html )

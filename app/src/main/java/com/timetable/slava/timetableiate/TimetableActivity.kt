@@ -1,13 +1,19 @@
 package com.timetable.slava.timetableiate
 
+import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
+import android.util.AttributeSet
+import android.view.View
+import android.widget.Toast
 import com.google.gson.Gson
+import java.lang.ref.WeakReference
 
 class TimetableActivity : AppCompatActivity() {
 
@@ -15,9 +21,70 @@ class TimetableActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_timetable)
 
-        val json = intent.getStringExtra("JSON_TIMETABLE")
-        val parsedTimetable = Gson().fromJson(json, ParsedTimetable::class.java)
+        val app = application as TimetableApp
+        val task: AsyncLambda<ParsedTimetable?>? = app.suprBundle.take(AsyncLambda.ARG_ASYNC_TIMETABLE_LOADER)
 
+        AsyncLambda<Void?>(WeakReference(this)) {
+            if (task != null) {
+                while (!task.isComplete) {}
+                val timetable = task.result
+
+                if (timetable != null) {
+                    val handler = Handler(it.mainLooper)
+                    val runnable = Runnable {
+                        setTimetableData(timetable)
+                    }
+                    handler.post(runnable)
+                }
+            }
+            return@AsyncLambda null
+        }.execute()
+
+        viewPager = findViewById(R.id.view_pager)
+        pagerAdapter = TimetableFragmentPagerAdapter(supportFragmentManager)//, timetableObj)
+        viewPager!!.adapter = pagerAdapter
+    }
+
+    override fun onCreateView(name: String?, context: Context?, attrs: AttributeSet?): View? {
+        return super.onCreateView(name, context, attrs)
+
+
+    }
+
+    class TimetableFragmentPagerAdapter(
+            fm: FragmentManager,
+            private var timetableObj: TimetableObj? = null
+    ) : FragmentPagerAdapter(fm) {
+
+        private var pageTitles: List<String>? = null //= timetableObj.items.keys.toList()
+
+        override fun getItem(p0: Int): Fragment {
+            val fragment = TimetableFragment.newInstance(p0)
+            val args = Bundle()
+            val items = timetableObj!!.items.values.toTypedArray()[p0]
+            args.putSerializable(TimetableFragment.ARG_TIMETABLE_LIST, ArrayList<TimetableItem>(items))
+            fragment.arguments = args
+
+            return fragment
+        }
+
+        override fun getCount() = pageCount
+
+        override fun getPageTitle(position: Int): CharSequence? {
+            return pageTitles?.get(position)
+        }
+
+        fun setData(timetable: TimetableObj) {
+            timetableObj = timetable
+            pageCount = timetable.items.size
+            pageTitles = ArrayList(timetable.items.keys)
+            notifyDataSetChanged()
+        }
+
+        var pageCount = 0
+    }
+
+    fun setTimetableData(parsedTimetable: ParsedTimetable) {
         title = parsedTimetable.name
 
         val linkedHashMap = LinkedHashMap<String, List<TimetableItem>>()
@@ -60,11 +127,13 @@ class TimetableActivity : AppCompatActivity() {
             for (parsedLesson in parsedDay.data) {
                 var param1name = ""
                 for (str in parsedLesson.parameter1)
-                    param1name += str.name
+                    param1name += str.name + "\n"
+                param1name = param1name.dropLast(1)
 
                 var param2name = ""
                 for (str in parsedLesson.parameter2)
-                    param2name += str.name
+                    param2name += str.name + "\n"
+                param2name = param2name.dropLast(1)
 
                 if (parsedLesson.time.length > 1)
                     switcher = !switcher
@@ -95,48 +164,18 @@ class TimetableActivity : AppCompatActivity() {
 
         val timetableObj = TimetableObj(0, "HUY", linkedHashMap)
 
-        viewPager = findViewById(R.id.view_pager)
-        pagerAdapter = TimetableFragmentPagerAdapter(supportFragmentManager, timetableObj)
-        viewPager!!.adapter = pagerAdapter
-
-
-    }
-
-    class TimetableFragmentPagerAdapter(
-            fm: FragmentManager,
-            private val timetableObj: TimetableObj
-    ) : FragmentPagerAdapter(fm) {
-
-        private var pageTitles = timetableObj.items.keys.toList()
-
-        override fun getItem(p0: Int): Fragment {
-            val fragment = TimetableFragment.newInstance(p0)
-            val args = Bundle()
-            val items = timetableObj.items.values.toTypedArray()[p0]
-            args.putSerializable(TimetableFragment.ARG_TIMETABLE_LIST, ArrayList<TimetableItem>(items))
-            fragment.arguments = args
-
-            return fragment
-        }
-
-        override fun getCount(): Int {
-            return page_cout;
-        }
-
-        override fun getPageTitle(position: Int): CharSequence? {
-            return pageTitles[position]
-        }
+        pagerAdapter!!.setData(timetableObj)
     }
 
 
 
     var viewPager: ViewPager? = null
-    var pagerAdapter: PagerAdapter? = null
+    var pagerAdapter: TimetableFragmentPagerAdapter? = null
 
     //private var timetableListView: ListView? = null
     //private var listAdapter: ArrayAdapter<ArrayList<TimetableItem>>? = null
 
+    var page_cout = 0
     companion object {
-        var page_cout = 0
     }
 }
