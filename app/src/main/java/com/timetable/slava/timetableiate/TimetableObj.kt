@@ -1,6 +1,8 @@
 package com.timetable.slava.timetableiate
 
-class TimetableItem(
+import java.io.Serializable
+
+class TimetableItem (
         val topClickableText: Map<String, String>,
         val bottomClickableText: Map<String, String>,
         val lesson: String,
@@ -9,7 +11,7 @@ class TimetableItem(
         val lesson_type: String,
         val circle: Int,
         val isLast: Boolean
-)
+) : Serializable
 
 class TimetableObj(
         val type: Int,

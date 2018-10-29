@@ -3,13 +3,11 @@ package com.timetable.slava.timetableiate
 import android.content.Context
 import android.graphics.Color
 import android.support.constraint.ConstraintLayout
-import android.support.constraint.ConstraintSet
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import org.w3c.dom.Text
 
 class TimetableListAdapter(
         private val context: Context,
@@ -17,78 +15,61 @@ class TimetableListAdapter(
         private val inflater: LayoutInflater = LayoutInflater.from(context)
 ) : BaseAdapter() {
 
-    companion object {
-        private class ViewHolder(val view: View) {
-            val textView1: TextView = view.findViewById(R.id.textView12)
-            val textView2: TextView = view.findViewById(R.id.textView15)
-            val time: TextView = view.findViewById(R.id.textView13)
-            val lessonName: TextView = view.findViewById(R.id.textView14)
-            val lessonType: ImageView = view.findViewById(R.id.imageView)
-            val textViewLt: TextView = view.findViewById(R.id.textViewLt)
-            val layout: ConstraintLayout = view.findViewById(R.id.constraintL)
+    private class ViewHolder(val view: View) {
+        val time: TextView = view.findViewById(R.id.textView13)
+        val lessonName: TextView = view.findViewById(R.id.textView14)
+        val lessonType: ImageView = view.findViewById(R.id.imageView)
+        val textViewLt: TextView = view.findViewById(R.id.textViewLt)
+        val layout: ConstraintLayout = view.findViewById(R.id.constraintL)
+        val linearLayout1: LinearLayout = view.findViewById(R.id.linearLayout)
+        val linearLayout2: LinearLayout = view.findViewById(R.id.linearLayout2)
 
-            //val paramsMap = HashMap<String, String>()
+        //val paramsMap = HashMap<String, String>()
 
-            fun setClickableText(textView: TextView, layoutId: Int, values: Map<String, String>) {
-                if (values.isNotEmpty()) {
-                    val linearLayout: LinearLayout = view.findViewById(layoutId)
-                    linearLayout.removeAllViewsInLayout()
-                    linearLayout.addView(textView)
+        fun addClickableTextViews(linearLayout: LinearLayout, values: Map<String, String>) {
+            val app = view.context.applicationContext as TimetableApp
+            linearLayout.removeAllViewsInLayout()
+            for (name in values.keys) {
+                val textView = TextView(view.context)
+                textView.text = name
+                @Suppress("DEPRECATION")
+                textView.setTextColor(view.resources.getColor(R.color.colorPrimaryDark))
 
-                    val names = ArrayList(values.keys)
+                textView.setOnClickListener {
 
-                    textView.text = names[0]
-                    //paramsMap.putAll(values)
-
-                    if (values.size > 1) {
-                        names.drop(0)
-
-
-                        for (name in names) {
-                            val textView = TextView(view.context)
-                            textView.text = name
-                            linearLayout.addView(textView)
-                        }
-                    }
+                    Log.e("CLICK!", "click on ${textView.text}")
+                    app.startNewTimetableActivity(app.getUrl(name)!!)
                 }
-            }
-
-            // TODO: создавать мапу ссылок на расписания в другом, общем классе
-            fun bind(item: TimetableItem) {
-                setClickableText(textView1, R.id.linearLayout, item.topClickableText)
-                setClickableText(textView2, R.id.linearLayout2, item.bottomClickableText)
-
-                time.text = item.lesson_time
-                textViewLt.text = item.lesson_type
-                lessonName.text = item.lesson
-
-                when (item.circle) {
-                    1 -> lessonType.setImageResource(R.drawable.odd)
-                    2 -> lessonType.setImageResource(R.drawable.even)
-                    3 -> lessonType.setImageResource(R.drawable.bevery)
-                    4 -> lessonType.setImageResource(R.drawable.bodd)
-                    5 -> lessonType.setImageResource(R.drawable.beven)
-                    6 -> {
-                        lessonType.visibility = View.INVISIBLE
-                        layout.setBackgroundColor(Color.argb(255, 210, 210, 210))
-                        lessonName.textSize = 16.0f
-                    }
-                }
-
-                if (item.isLast)
-                    layout.setBackgroundColor(Color.argb(255, 220, 220, 220))
+                linearLayout.addView(textView)
             }
         }
-    }
 
-    fun setItems(items: Collection<TimetableItem>) {
-        timetableList.addAll(items)
-        notifyDataSetChanged()
-    }
+        // TODO: создавать мапу ссылок на расписания в другом, общем классе
+        // TODO: при прокрутке меняется цвет фона строчек в таблице
+        fun bind(item: TimetableItem) {
+            addClickableTextViews(linearLayout1, item.topClickableText)
+            addClickableTextViews(linearLayout2, item.bottomClickableText)
 
-    fun clearItems() {
-        timetableList.clear()
-        notifyDataSetChanged()
+            time.text = item.lesson_time
+            textViewLt.text = item.lesson_type
+            lessonName.text = item.lesson
+
+            when (item.circle) {
+                1 -> lessonType.setImageResource(R.drawable.odd)
+                2 -> lessonType.setImageResource(R.drawable.even)
+                3 -> lessonType.setImageResource(R.drawable.bevery)
+                4 -> lessonType.setImageResource(R.drawable.bodd)
+                5 -> lessonType.setImageResource(R.drawable.beven)
+                6 -> {
+                    lessonType.visibility = View.INVISIBLE
+                    layout.setBackgroundColor(Color.argb(255, 210, 210, 210))
+                    lessonName.textSize = 16.0f
+                }
+            }
+
+            if (item.isLast)
+                layout.setBackgroundColor(Color.argb(255, 220, 220, 220))
+        }
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
@@ -97,10 +78,11 @@ class TimetableListAdapter(
 
         Log.e("position", position.toString())
         if (convertView == null) {
+            Log.e("Info", "Creating new View...")
             view = inflater.inflate(R.layout.timatable_item_layout, parent, false)
             viewHolder = ViewHolder(view)
             view.tag = viewHolder
-            Log.e("Info", "Create new View")
+            Log.e("Info", "new View created.")
         } else {
             view = convertView
             viewHolder = view.tag as ViewHolder

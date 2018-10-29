@@ -41,23 +41,22 @@ class MainActivity : AppCompatActivity() {
 
                 findingUrls.size > 1 -> {
                     ChooseGroupDialog.newInstance(ArrayList(findingUrls.keys), selectedType) { findingName ->
-                        startTimetableActivity(findingName, findingUrls[findingName]!!)
+                        startTimetableActivity(findingUrls[findingName]!!)
                     }.show(supportFragmentManager, "Dialog")
                     return@setOnClickListener
                 }
 
                 findingUrls.isNotEmpty() -> startTimetableActivity(
-                        findingUrls.keys.elementAt(0),
                         findingUrls.values.elementAt(0)
                 )
             }
         }
     }
 
-    private fun startTimetableActivity(name: String, urlPostfix: String) {
+    private fun startTimetableActivity(urlPostfix: String) {
         val app = application as TimetableApp
         val url = GetTimetableTask.ARG_HTTP_START_PAGE + urlPostfix
-        app.startNewTimetableActivity(name, url)
+        app.startNewTimetableActivity(url)
         btnShow.isClickable = false
     }
 

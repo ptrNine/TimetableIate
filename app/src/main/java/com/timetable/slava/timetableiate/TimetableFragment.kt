@@ -2,6 +2,7 @@ package com.timetable.slava.timetableiate
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,18 +14,22 @@ import android.widget.ListView
 class TimetableFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.e("TimetableFragment", "Creating...")
         super.onCreate(savedInstanceState)
         pageNumber = arguments.let { it?.getInt(ARG_PAGE_NUMBER) }
         timetable = arguments.let { it?.getSerializable(ARG_TIMETABLE_LIST) as ArrayList<TimetableItem> }
+        Log.e("TimetableFragment", "Created.")
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        Log.e("TimetableFragment", "Creating view...")
         val view = inflater.inflate(R.layout.timetable_list_view, container, false)
 
         listView = view.findViewById(R.id.list_view)
         listAdapter = TimetableListAdapter(inflater.context, timetable!!)//ArrayAdapter(inflater.context, R.layout.timatable_item_layout, timetable!!.toMutableList())
 
         listView!!.adapter = listAdapter
+        Log.e("TimetableFragment", "View created.")
         return view
     }
 

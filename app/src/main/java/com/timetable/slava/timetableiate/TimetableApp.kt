@@ -46,7 +46,7 @@ class TimetableApp : Application() {
         }
     }
 
-    fun startNewTimetableActivity(name: String, timetableUrl: String) {
+    fun startNewTimetableActivity(timetableUrl: String) {
         val loadTimetableTask = AsyncLambda(WeakReference(applicationContext)) { cntxt ->
             val htmlPage = GetTimetableTask(WeakReference(cntxt)).run(
                     GetTimetableTask.ARG_GET_TIMETABLE_HTML_PAGE, timetableUrl)
@@ -60,9 +60,11 @@ class TimetableApp : Application() {
         }
         loadTimetableTask.execute()
 
-        suprBundle.put(AsyncLambda.ARG_ASYNC_TIMETABLE_LOADER, loadTimetableTask)
+        val processToken = AsyncLambda.ARG_ASYNC_TIMETABLE_LOADER + timetableUrl
+        suprBundle.put(processToken, loadTimetableTask)
 
         val intent = Intent(this, TimetableActivity::class.java)
+        intent.putExtra(null, processToken)
         startActivity(intent)
     }
 
@@ -75,6 +77,13 @@ class TimetableApp : Application() {
             entry -> entry.startsWith(name, true)
         } ?: HashMap()
     }
+
+
+
+    // Urls by names from server response json
+    private val urlsMap = HashMap<String, String>()
+    fun addUrl(name: String, value: String) { urlsMap[name] = value }
+    fun getUrl(name: String) = urlsMap[name]
 
     private var timetableUrls = HashMap<String, HashMap<String, String>>()
 

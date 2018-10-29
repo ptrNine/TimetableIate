@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.google.gson.Gson
@@ -18,36 +19,47 @@ import java.lang.ref.WeakReference
 class TimetableActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.e("TimetableActivity", "Create new activity")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_timetable)
 
         val app = application as TimetableApp
-        val task: AsyncLambda<ParsedTimetable?>? = app.suprBundle.take(AsyncLambda.ARG_ASYNC_TIMETABLE_LOADER)
+        val processToken = intent.getStringExtra(null)!!
+        val task: AsyncLambda<ParsedTimetable?>? = app.suprBundle.take(processToken)
 
+        Log.e("TimetableActivity", "Creating Async Task...")
         AsyncLambda<Void?>(WeakReference(this)) {
+            Log.e("TimetableActivity", "Run Async Task...")
             if (task != null) {
                 while (!task.isComplete) {}
+                Log.e("TimetableActivity", "AsyncTask: get timetable result...")
                 val timetable = task.result
+                Log.e("TimetableActivity", "AsyncTask: get timetable result: DONE")
 
                 if (timetable != null) {
+                    Log.e("TimetableActivity", "Handler: creating task in ui thread...")
                     val handler = Handler(it.mainLooper)
                     val runnable = Runnable {
+                        Log.e("TimetableActivity", "Runnable: running...")
                         setTimetableData(timetable)
+                        Log.e("TimetableActivity", "Runnable: DONE!")
                     }
                     handler.post(runnable)
+                    Log.e("TimetableActivity", "Handler: task in ui thread created!")
                 }
             }
             return@AsyncLambda null
         }.execute()
+        Log.e("TimetableActivity", "Async Task Created")
 
         viewPager = findViewById(R.id.view_pager)
         pagerAdapter = TimetableFragmentPagerAdapter(supportFragmentManager)//, timetableObj)
         viewPager!!.adapter = pagerAdapter
+        Log.e("TimetableActivity", "Activity created")
     }
 
     override fun onCreateView(name: String?, context: Context?, attrs: AttributeSet?): View? {
         return super.onCreateView(name, context, attrs)
-
 
     }
 
@@ -86,6 +98,7 @@ class TimetableActivity : AppCompatActivity() {
 
     fun setTimetableData(parsedTimetable: ParsedTimetable) {
         title = parsedTimetable.name
+        val app = application as TimetableApp
 
         val linkedHashMap = LinkedHashMap<String, List<TimetableItem>>()
         for (parsedDay in parsedTimetable.data) {
@@ -128,8 +141,8 @@ class TimetableActivity : AppCompatActivity() {
             for (parsedLesson in parsedDay.data) {
                 val param1 = HashMap<String, String>()
                 val param2 = HashMap<String, String>()
-                parsedLesson.parameter1.forEach { it -> param1[it.name] = it.reference }
-                parsedLesson.parameter2.forEach { it -> param2[it.name] = it.reference }
+                parsedLesson.parameter1.forEach { it -> param1[it.name] = it.reference; app.addUrl(it.name, it.reference) }
+                parsedLesson.parameter2.forEach { it -> param2[it.name] = it.reference; app.addUrl(it.name, it.reference)  }
 
                 if (parsedLesson.time.length > 1)
                     switcher = !switcher
@@ -162,15 +175,8 @@ class TimetableActivity : AppCompatActivity() {
         pagerAdapter!!.setData(timetableObj)
     }
 
-
-
     var viewPager: ViewPager? = null
     var pagerAdapter: TimetableFragmentPagerAdapter? = null
 
-    //private var timetableListView: ListView? = null
-    //private var listAdapter: ArrayAdapter<ArrayList<TimetableItem>>? = null
-
     var page_cout = 0
-    companion object {
-    }
 }

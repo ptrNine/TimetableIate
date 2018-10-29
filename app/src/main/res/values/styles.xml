@@ -8,4 +8,16 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+   <!--<style name="AppTheme" parent="Theme.AppCompat">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryLight">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorSecondaryLight">@color/colorSecondaryLight</item>
+        <item name="colorSecondaryDark">@color/colorSecondaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    -->
+
 </resources>
