@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">Расписание ИАТЭ</string>
     <string name="unnable_to_load_urls">Ссылки на страницы расписаний не были загружены</string>
+    <string name="cant_find_group">Группа не найдена</string>
+    <string name="cant_find_room">Аудитория не найдена</string>
+    <string name="cant_find_teacher">Преподаватель не найден</string>
+    <string name="choose_group">Выберите группу:</string>
+    <string name="choose_room">Выберите аудиторию:</string>
+    <string name="choose_teacher">Выберите преподавателя:</string>
 
     <string name="filename_timetable_urls">"timetable_urls.dat"</string>
 </resources>

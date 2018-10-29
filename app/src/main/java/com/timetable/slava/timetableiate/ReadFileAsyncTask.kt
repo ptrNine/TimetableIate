@@ -6,8 +6,8 @@ import java.io.File
 import java.lang.ref.WeakReference
 
 class ReadFileTask(
-        private val filePath: String,
-        private val applicationContext: WeakReference<Context>
+        private val applicationContext: WeakReference<Context>,
+        private val filePath: String
 ) {
     fun run(): String {
         var resultData = ""
@@ -31,6 +31,6 @@ class ReadFileAsyncTask(
 ) : AsyncTask<Void, Void, String>() {
 
     override fun doInBackground(vararg params: Void?): String {
-        return ReadFileTask(filePath, applicationContext).run()
+        return ReadFileTask(applicationContext, filePath).run()
     }
 }
