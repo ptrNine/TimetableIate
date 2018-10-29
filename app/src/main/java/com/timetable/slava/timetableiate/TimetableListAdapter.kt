@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.support.constraint.ConstraintLayout
 import android.support.constraint.ConstraintSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,26 +31,22 @@ class TimetableListAdapter(
 
             fun setClickableText(textView: TextView, layoutId: Int, values: Map<String, String>) {
                 if (values.isNotEmpty()) {
+                    val linearLayout: LinearLayout = view.findViewById(layoutId)
+                    linearLayout.removeAllViewsInLayout()
+                    linearLayout.addView(textView)
+
                     val names = ArrayList(values.keys)
-                    val urls = ArrayList(values.values)
 
                     textView.text = names[0]
                     //paramsMap.putAll(values)
 
                     if (values.size > 1) {
                         names.drop(0)
-                        urls.drop(0)
 
-                        val linearLayout: LinearLayout = view.findViewById(layoutId)
 
                         for (name in names) {
                             val textView = TextView(view.context)
-                            val layoutParams = LinearLayout.LayoutParams(
-                                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                                    LinearLayout.LayoutParams.WRAP_CONTENT
-                            )
                             textView.text = name
-                            textView.layoutParams = layoutParams
                             linearLayout.addView(textView)
                         }
                     }
@@ -98,13 +95,16 @@ class TimetableListAdapter(
         val view: View?
         val viewHolder: ViewHolder?
 
+        Log.e("position", position.toString())
         if (convertView == null) {
             view = inflater.inflate(R.layout.timatable_item_layout, parent, false)
             viewHolder = ViewHolder(view)
             view.tag = viewHolder
+            Log.e("Info", "Create new View")
         } else {
             view = convertView
             viewHolder = view.tag as ViewHolder
+            Log.e("Info", "Load ViewHolder")
         }
 
         viewHolder.bind(timetableList[position])
