@@ -3,11 +3,12 @@ package com.timetable.slava.timetableiate
 import android.content.Context
 import android.graphics.Color
 import android.support.constraint.ConstraintLayout
+import android.support.constraint.ConstraintSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import java.util.zip.Inflater
+import org.w3c.dom.Text
 
 class TimetableListAdapter(
         private val context: Context,
@@ -16,18 +17,50 @@ class TimetableListAdapter(
 ) : BaseAdapter() {
 
     companion object {
-        private class ViewHolder(view: View) {
-            val textView1 = view.findViewById<TextView>(R.id.textView12)
-            val textView2 = view.findViewById<TextView>(R.id.textView15)
-            val time = view.findViewById<TextView>(R.id.textView13)
-            val lessonName = view.findViewById<TextView>(R.id.textView14)
-            val lessonType = view.findViewById<ImageView>(R.id.imageView)
-            val textViewLt = view.findViewById<TextView>(R.id.textViewLt)
-            val layout = view.findViewById<ConstraintLayout>(R.id.constraintL)
+        private class ViewHolder(val view: View) {
+            val textView1: TextView = view.findViewById(R.id.textView12)
+            val textView2: TextView = view.findViewById(R.id.textView15)
+            val time: TextView = view.findViewById(R.id.textView13)
+            val lessonName: TextView = view.findViewById(R.id.textView14)
+            val lessonType: ImageView = view.findViewById(R.id.imageView)
+            val textViewLt: TextView = view.findViewById(R.id.textViewLt)
+            val layout: ConstraintLayout = view.findViewById(R.id.constraintL)
 
+            //val paramsMap = HashMap<String, String>()
+
+            fun setClickableText(textView: TextView, layoutId: Int, values: Map<String, String>) {
+                if (values.isNotEmpty()) {
+                    val names = ArrayList(values.keys)
+                    val urls = ArrayList(values.values)
+
+                    textView.text = names[0]
+                    //paramsMap.putAll(values)
+
+                    if (values.size > 1) {
+                        names.drop(0)
+                        urls.drop(0)
+
+                        val linearLayout: LinearLayout = view.findViewById(layoutId)
+
+                        for (name in names) {
+                            val textView = TextView(view.context)
+                            val layoutParams = LinearLayout.LayoutParams(
+                                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                                    LinearLayout.LayoutParams.WRAP_CONTENT
+                            )
+                            textView.text = name
+                            textView.layoutParams = layoutParams
+                            linearLayout.addView(textView)
+                        }
+                    }
+                }
+            }
+
+            // TODO: создавать мапу ссылок на расписания в другом, общем классе
             fun bind(item: TimetableItem) {
-                textView1.text = item.prepod
-                textView2.text = item.room_where
+                setClickableText(textView1, R.id.linearLayout, item.topClickableText)
+                setClickableText(textView2, R.id.linearLayout2, item.bottomClickableText)
+
                 time.text = item.lesson_time
                 textViewLt.text = item.lesson_type
                 lessonName.text = item.lesson

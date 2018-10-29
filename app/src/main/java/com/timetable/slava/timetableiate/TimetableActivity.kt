@@ -114,10 +114,11 @@ class TimetableActivity : AppCompatActivity() {
                 }
             }
 
+            // TODO: mark link as unclickable
             day.add(TimetableItem(
-                    "",
+                    mapOf("" to ""),
+                    mapOf("" to ""),
                     "К " + lessonNumber.toString() + " паре",
-                    "",
                     "",
                     parsedTimetable.name,
                     "",
@@ -125,15 +126,10 @@ class TimetableActivity : AppCompatActivity() {
                     switcher))
 
             for (parsedLesson in parsedDay.data) {
-                var param1name = ""
-                for (str in parsedLesson.parameter1)
-                    param1name += str.name + "\n"
-                param1name = param1name.dropLast(1)
-
-                var param2name = ""
-                for (str in parsedLesson.parameter2)
-                    param2name += str.name + "\n"
-                param2name = param2name.dropLast(1)
+                val param1 = HashMap<String, String>()
+                val param2 = HashMap<String, String>()
+                parsedLesson.parameter1.forEach { it -> param1[it.name] = it.reference }
+                parsedLesson.parameter2.forEach { it -> param2[it.name] = it.reference }
 
                 if (parsedLesson.time.length > 1)
                     switcher = !switcher
@@ -144,13 +140,12 @@ class TimetableActivity : AppCompatActivity() {
                     " down-circle " -> circle = 2
                 }
 
-                if (param1name == "Кучерявый С.И.")
-                    circle += 3
+                if (param1.contains("Кучерявый С.И.")) circle += 3
 
                 day.add(TimetableItem(
-                        param1name,
+                        param1,
+                        param2,
                         parsedLesson.name,
-                        param2name,
                         parsedLesson.time,
                         parsedTimetable.name,
                         parsedLesson.type,
