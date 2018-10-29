@@ -30,7 +30,7 @@ class GetTimetableTask(private val appContext: WeakReference<Context>) {
                     returnMap[ARG_ITEM_TYPE_TEACHER] = postRequestWithFormData(ARG_HTTP_START_PAGE, "", ARG_ITEM_TYPE_TEACHER)
                 }
                 params[0] == ARG_GET_TIMETABLE_HTML_PAGE -> // params[1] - url postfix
-                    returnMap[null] = getRequest(ARG_HTTP_START_PAGE + params[1])
+                    returnMap[null] = getRequest(params[1]!!)
             }
         } catch (e: Exception) {
             Log.e("GetTimetableTask", e.toString() + ":" + e.message.toString())
@@ -91,9 +91,5 @@ class GetTimetableAsyncTask(
 
     override fun doInBackground(vararg params: String?): HashMap<String?, String> {
         return GetTimetableTask(appContext).run(*params)
-    }
-
-    companion object {
-        const val ARG_EXCEPTION_WAS = "__EXCEPTION"
     }
 }

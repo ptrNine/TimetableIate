@@ -6,30 +6,31 @@ import com.google.gson.Gson
 import java.lang.ref.WeakReference
 
 
-class WriteFileTask<T>(
+class WriteFileTask(
         private val applicationContext: WeakReference<Context>,
         private val filePath: String,
-        private val obj: T
+        private val byteArray: ByteArray
 ) {
 
     fun run() {
         val context = applicationContext.get()
         if (context != null) {
             val file = context.openFileOutput(filePath, Context.MODE_PRIVATE)
-            file.write(Gson().toJson(obj).toByteArray())
+            file.write(byteArray)
+            file.close()
         }
     }
 }
 
 
-class WriteFileAsyncTask<T>(
+class WriteFileAsyncTask(
         private val filePath: String,
         private val applicationContext: WeakReference<Context>,
-        private val obj: T
+        private val byteArray: ByteArray
 ) : AsyncTask<Void, Void, Void?>() {
 
     override fun doInBackground(vararg params: Void?): Void? {
-        WriteFileTask(applicationContext, filePath, obj).run()
+        WriteFileTask(applicationContext, filePath, byteArray).run()
         return null
     }
 }

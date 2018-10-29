@@ -327,7 +327,7 @@ public:
 
 extern "C" JNIEXPORT jstring JNICALL
 //Java_com_example_slava_myapplication11_TimetableActivity_parseTimetable(
-Java_com_timetable_slava_timetableiate_MainActivity_parseTimetable(
+Java_com_timetable_slava_timetableiate_TimetableApp_parseTimetable(
         JNIEnv* env,
         jobject obj,
         jstring jHtmlPage )

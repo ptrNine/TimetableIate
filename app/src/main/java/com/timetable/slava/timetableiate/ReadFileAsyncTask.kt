@@ -17,8 +17,9 @@ class ReadFileTask(
             val file = File(context.filesDir, filePath)
 
             if (file.exists()) {
-                val openFile = context.openFileInput(filePath).bufferedReader()
-                resultData = openFile.readText()
+                val inputFile = context.openFileInput(filePath).bufferedReader()
+                resultData = inputFile.readText()
+                inputFile.close()
             }
         }
         return resultData
