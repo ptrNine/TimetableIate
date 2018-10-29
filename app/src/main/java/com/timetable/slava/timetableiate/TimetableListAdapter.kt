@@ -2,8 +2,10 @@ package com.timetable.slava.timetableiate
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Typeface
 import android.support.constraint.ConstraintLayout
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,22 +31,25 @@ class TimetableListAdapter(
         fun addClickableTextViews(linearLayout: LinearLayout, values: Map<String, String>) {
             val app = view.context.applicationContext as TimetableApp
             linearLayout.removeAllViewsInLayout()
+
+            val outValue = TypedValue()
+            view.context.theme.resolveAttribute(R.attr.selectableItemBackground, outValue, true)
+
             for (name in values.keys) {
                 val textView = TextView(view.context)
                 textView.text = name
+                textView.setTypeface(textView.typeface, Typeface.ITALIC)
                 @Suppress("DEPRECATION")
                 textView.setTextColor(view.resources.getColor(R.color.colorPrimaryDark))
+                textView.setBackgroundResource(outValue.resourceId)
 
                 textView.setOnClickListener {
-
-                    Log.e("CLICK!", "click on ${textView.text}")
                     app.startNewTimetableActivity(app.getUrl(name)!!)
                 }
                 linearLayout.addView(textView)
             }
         }
 
-        // TODO: создавать мапу ссылок на расписания в другом, общем классе
         // TODO: при прокрутке меняется цвет фона строчек в таблице
         fun bind(item: TimetableItem) {
             addClickableTextViews(linearLayout1, item.topClickableText)
