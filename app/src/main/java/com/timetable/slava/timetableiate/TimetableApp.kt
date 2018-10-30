@@ -26,6 +26,8 @@ class TimetableApp : Application() {
                 val readFile = ReadFileTask(WeakReference(it), fileName).run()
                 timetableUrls = Gson().fromJson(readFile,
                         object: TypeToken<HashMap<String, HashMap<String, String>>>(){}.type)
+
+                isUrlPostfixesLoaded = true
                 return@AsyncLambda
             }.execute()
         } else {
@@ -41,6 +43,8 @@ class TimetableApp : Application() {
                 }
                 if (timetableUrls.isNotEmpty())
                     WriteFileTask(WeakReference(it), fileName, gson.toJson(timetableUrls).toByteArray()).run()
+
+                isUrlPostfixesLoaded = true
                 return@AsyncLambda
             }.execute()
         }
@@ -78,6 +82,13 @@ class TimetableApp : Application() {
         } ?: HashMap()
     }
 
+    fun getUrlPostfixesNames(type: String): ArrayList<String>? {
+        return if (timetableUrls.isNotEmpty() && timetableUrls.containsKey(type))
+            ArrayList(timetableUrls[type]!!.keys)
+        else
+            null
+    }
+
 
 
     // Urls by names from server response json
@@ -86,7 +97,8 @@ class TimetableApp : Application() {
     fun getUrl(name: String) = urlsMap[name]
 
     private var timetableUrls = HashMap<String, HashMap<String, String>>()
-
+    var isUrlPostfixesLoaded = false
+        private set
 
 
     class UnsafeSuperBundle {

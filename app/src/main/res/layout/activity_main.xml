@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/teInput"
         android:layout_width="282.0dip"
         android:layout_height="67.0dip"
@@ -69,6 +70,7 @@
     </RadioGroup>
 
     <LinearLayout
+        android:id="@+id/linearLayout3"
         android:layout_width="0.0dip"
         android:layout_height="39.0dip"
         android:layout_marginBottom="32.0dip"
@@ -146,4 +148,5 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </android.support.constraint.ConstraintLayout>
+
 </android.support.constraint.ConstraintLayout>
